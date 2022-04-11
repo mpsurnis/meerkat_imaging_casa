@@ -270,3 +270,21 @@ flagdata(vis=target_ms,mode='extend',growtime=90.0,growfreq=90.0,growaround=True
 
 full_integ_imagename = target + '_full'
 tclean(vis=target_ms,selectdata=True,field="",spw="",timerange="",uvrange="",antenna="",scan="",observation="",intent="",datacolumn="corrected",imagename=full_integ_imagename,imsize=[5000, 5000],cell=['3.0arcsec'],phasecenter="",stokes="I",projection="SIN",startmodel="",specmode="mfs",reffreq="",nchan=-1,start="",width="",outframe="LSRK",veltype="radio",restfreq=[],interpolation="linear",perchanweightdensity=True,gridder="widefield",facets=1,psfphasecenter="",chanchunks=1,wprojplanes=-1,vptable="",mosweight=True,aterm=True,psterm=False,wbawp=False,conjbeams=False,cfcache="",usepointing=False,computepastep=360.0,rotatepastep=360.0,pointingoffsetsigdev=[],pblimit=-1,normtype="flatnoise",deconvolver="mtmfs",scales=[0, 5, 15],nterms=2,smallscalebias=0.6,restoration=True,restoringbeam=[],pbcor=False,outlierfile="",weighting="briggs",robust=0,noise="1.0Jy",npixels=0,uvtaper=[],niter=25000,gain=0.1,threshold="0.05mJy",nsigma=0.0,cycleniter=-1,cyclefactor=0.5,minpsffraction=0.05,maxpsffraction=0.8,interactive=False,usemask="auto-multithresh",mask="",pbmask=0.0,sidelobethreshold=2.5,noisethreshold=5.0,lownoisethreshold=1.5,negativethreshold=0.0,smoothfactor=1.0,minbeamfrac=0.3,cutthreshold=0.01,growiterations=75,dogrowprune=True,minpercentchange=-1.0,verbose=False,fastnoise=True,restart=True,savemodel="modelcolumn",calcres=True,calcpsf=True,parallel=False)
+image_to_export = full_integ_imagename + '.image.tt0'
+fits_image_name = full_integ_imagename + '.fits'
+exportfits(imagename=image_to_export,fitsimage=fits_image_name)
+
+# --- Now do a phase only self-cal
+
+gtab = target_ms + '.GP0'
+gaincal(vis=target_ms,field='0',uvrange=myuvrange,caltable=gtab,refant = str(ref_ant),solint='64s',solnorm=False,combine='',minsnr=3,calmode='p',parang=False,gaintable=[],gainfield=[],interp=[],append=False)
+
+applycal(vis=target_ms,gaintable=[gtab],field='0',calwt=False,parang=False,applymode='calonly',gainfield='0',interp = ['nearest'])
+
+# --- Now make the image again
+
+full_integ_selfcal = target + 'selfcal0_full'
+tclean(vis=target_ms,selectdata=True,field="",spw="",timerange="",uvrange="",antenna="",scan="",observation="",intent="",datacolumn="corrected",imagename=full_integ_selfcal,imsize=[5000, 5000],cell=['3.0arcsec'],phasecenter="",stokes="I",projection="SIN",startmodel="",specmode="mfs",reffreq="",nchan=-1,start="",width="",outframe="LSRK",veltype="radio",restfreq=[],interpolation="linear",perchanweightdensity=True,gridder="widefield",facets=1,psfphasecenter="",chanchunks=1,wprojplanes=-1,vptable="",mosweight=True,aterm=True,psterm=False,wbawp=False,conjbeams=False,cfcache="",usepointing=False,computepastep=360.0,rotatepastep=360.0,pointingoffsetsigdev=[],pblimit=-1,normtype="flatnoise",deconvolver="mtmfs",scales=[0, 5, 15],nterms=2,smallscalebias=0.6,restoration=True,restoringbeam=[],pbcor=False,outlierfile="",weighting="briggs",robust=0,noise="1.0Jy",npixels=0,uvtaper=[],niter=25000,gain=0.1,threshold="0.05mJy",nsigma=0.0,cycleniter=-1,cyclefactor=0.5,minpsffraction=0.05,maxpsffraction=0.8,interactive=False,usemask="auto-multithresh",mask="",pbmask=0.0,sidelobethreshold=2.5,noisethreshold=5.0,lownoisethreshold=1.5,negativethreshold=0.0,smoothfactor=1.0,minbeamfrac=0.3,cutthreshold=0.01,growiterations=75,dogrowprune=True,minpercentchange=-1.0,verbose=False,fastnoise=True,restart=True,savemodel="modelcolumn",calcres=True,calcpsf=True,parallel=False)
+image_to_export = full_integ_selfcal + '.image.tt0'
+fits_image_name = full_integ_selfcal + '.fits'
+exportfits(imagename=image_to_export,fitsimage=fits_image_name)
