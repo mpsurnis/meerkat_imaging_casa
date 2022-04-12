@@ -4,8 +4,9 @@
 # Contact msurnis@gmail.com in case of any issues
 # Started compiling the first scratch pipeline
 # This pipeline assumes that the calibrator and target are in different MS files
+# The typical observation would be a pulsar timing run like MeerTIME
 #################################Set Defaults###################################
-# Initial config set-up (The target, calibrator names can be obtained using litobs) 
+# Initial config set-up (The target, calibrator names can be obtained using listobs) 
 
 import shutil
 bpcal_ms = '1623281324_sdp_l0.ms'
@@ -33,6 +34,12 @@ ftab2 = bpcal_ms+'_'+'tt'+'.flux2'
 ktab3 = bpcal_ms+'_'+'tt'+'.K3'
 gtab3 = bpcal_ms+'_'+'tt'+'.G3'
 ftab3 = bpcal_ms+'_'+'tt'+'.flux3'
+doselfcal = True
+dotimeslices = True
+time_before = ''
+time_on = ''
+time_after = ''
+imspw = ''
 
 # ------------------------------------------------------------------------
 
@@ -274,17 +281,49 @@ image_to_export = full_integ_imagename + '.image.tt0'
 fits_image_name = full_integ_imagename + '.fits'
 exportfits(imagename=image_to_export,fitsimage=fits_image_name)
 
+# --- Form the time slice images. There's 3 of them: 1 before, 1 at and 1 after the FRB time slice
+
+if dotimeslices:
+   before_imagename = target + '_before'
+   tclean(vis=target_ms,selectdata=True,field="",spw=imspw,timerange=time_before,uvrange="",antenna="",scan="",observation="",intent="",datacolumn="corrected",imagename=before_imagename,imsize=[5000, 5000],cell=['3.0arcsec'],phasecenter="",stokes="I",projection="SIN",startmodel="",specmode="mfs",reffreq="",nchan=-1,start="",width="",outframe="LSRK",veltype="radio",restfreq=[],interpolation="linear",perchanweightdensity=True,gridder="widefield",facets=1,psfphasecenter="",chanchunks=1,wprojplanes=-1,vptable="",mosweight=True,aterm=True,psterm=False,wbawp=False,conjbeams=False,cfcache="",usepointing=False,computepastep=360.0,rotatepastep=360.0,pointingoffsetsigdev=[],pblimit=-1,normtype="flatnoise",deconvolver="mtmfs",scales=[0, 5, 15],nterms=2,smallscalebias=0.6,restoration=True,restoringbeam=[],pbcor=False,outlierfile="",weighting="briggs",robust=0,noise="1.0Jy",npixels=0,uvtaper=[],niter=25000,gain=0.1,threshold="0.05mJy",nsigma=0.0,cycleniter=-1,cyclefactor=0.5,minpsffraction=0.05,maxpsffraction=0.8,interactive=False,usemask="auto-multithresh",mask="",pbmask=0.0,sidelobethreshold=2.5,noisethreshold=5.0,lownoisethreshold=1.5,negativethreshold=0.0,smoothfactor=1.0,minbeamfrac=0.3,cutthreshold=0.01,growiterations=75,dogrowprune=True,minpercentchange=-1.0,verbose=False,fastnoise=True,restart=True,savemodel="modelcolumn",calcres=True,calcpsf=True,parallel=False)
+   image_to_export = before_imagename + '.image.tt0'
+   fits_image_name = before_imagename + '.fits'
+   exportfits(imagename=image_to_export,fitsimage=fits_image_name)
+
+   on_imagename = target + '_on'
+   tclean(vis=target_ms,selectdata=True,field="",spw=imspw,timerange=time_on,uvrange="",antenna="",scan="",observation="",intent="",datacolumn="corrected",imagename=on_imagename,imsize=[5000, 5000],cell=['3.0arcsec'],phasecenter="",stokes="I",projection="SIN",startmodel="",specmode="mfs",reffreq="",nchan=-1,start="",width="",outframe="LSRK",veltype="radio",restfreq=[],interpolation="linear",perchanweightdensity=True,gridder="widefield",facets=1,psfphasecenter="",chanchunks=1,wprojplanes=-1,vptable="",mosweight=True,aterm=True,psterm=False,wbawp=False,conjbeams=False,cfcache="",usepointing=False,computepastep=360.0,rotatepastep=360.0,pointingoffsetsigdev=[],pblimit=-1,normtype="flatnoise",deconvolver="mtmfs",scales=[0, 5, 15],nterms=2,smallscalebias=0.6,restoration=True,restoringbeam=[],pbcor=False,outlierfile="",weighting="briggs",robust=0,noise="1.0Jy",npixels=0,uvtaper=[],niter=25000,gain=0.1,threshold="0.05mJy",nsigma=0.0,cycleniter=-1,cyclefactor=0.5,minpsffraction=0.05,maxpsffraction=0.8,interactive=False,usemask="auto-multithresh",mask="",pbmask=0.0,sidelobethreshold=2.5,noisethreshold=5.0,lownoisethreshold=1.5,negativethreshold=0.0,smoothfactor=1.0,minbeamfrac=0.3,cutthreshold=0.01,growiterations=75,dogrowprune=True,minpercentchange=-1.0,verbose=False,fastnoise=True,restart=True,savemodel="modelcolumn",calcres=True,calcpsf=True,parallel=False)
+   image_to_export = on_imagename + '.image.tt0'
+   fits_image_name = on_imagename + '.fits'
+   exportfits(imagename=image_to_export,fitsimage=fits_image_name)
+
+   after_imagename = target + '_after'
+   tclean(vis=target_ms,selectdata=True,field="",spw=imspw,timerange=time_after,uvrange="",antenna="",scan="",observation="",intent="",datacolumn="corrected",imagename=after_imagename,imsize=[5000, 5000],cell=['3.0arcsec'],phasecenter="",stokes="I",projection="SIN",startmodel="",specmode="mfs",reffreq="",nchan=-1,start="",width="",outframe="LSRK",veltype="radio",restfreq=[],interpolation="linear",perchanweightdensity=True,gridder="widefield",facets=1,psfphasecenter="",chanchunks=1,wprojplanes=-1,vptable="",mosweight=True,aterm=True,psterm=False,wbawp=False,conjbeams=False,cfcache="",usepointing=False,computepastep=360.0,rotatepastep=360.0,pointingoffsetsigdev=[],pblimit=-1,normtype="flatnoise",deconvolver="mtmfs",scales=[0, 5, 15],nterms=2,smallscalebias=0.6,restoration=True,restoringbeam=[],pbcor=False,outlierfile="",weighting="briggs",robust=0,noise="1.0Jy",npixels=0,uvtaper=[],niter=25000,gain=0.1,threshold="0.05mJy",nsigma=0.0,cycleniter=-1,cyclefactor=0.5,minpsffraction=0.05,maxpsffraction=0.8,interactive=False,usemask="auto-multithresh",mask="",pbmask=0.0,sidelobethreshold=2.5,noisethreshold=5.0,lownoisethreshold=1.5,negativethreshold=0.0,smoothfactor=1.0,minbeamfrac=0.3,cutthreshold=0.01,growiterations=75,dogrowprune=True,minpercentchange=-1.0,verbose=False,fastnoise=True,restart=True,savemodel="modelcolumn",calcres=True,calcpsf=True,parallel=False)
+   image_to_export = after_imagename + '.image.tt0'
+   fits_image_name = after_imagename + '.fits'
+   exportfits(imagename=image_to_export,fitsimage=fits_image_name)
+
+# --- Now make the difference images
+
+   before_imagename = before_imagename + '.fits'
+   on_imagename = on_imagename + '.fits'
+   after_imagename = after_imagename + '.fits'
+   immath(imagename=[on_imagename,before_imagename],mode="evalexpr",outfile="on-before",expr="(IM0-IM1)",varnames="",sigma="0.0mJy/beam",polithresh="",mask="",region="",box="",chans="",stokes="",stretch=False,imagemd="")
+   exportfits(imagename='on-before',fitsimage='on-before.fits')
+   immath(imagename=[on_imagename,after_imagename],mode="evalexpr",outfile="on-after",expr="(IM0-IM1)",varnames="",sigma="0.0mJy/beam",polithresh="",mask="",region="",box="",chans="",stokes="",stretch=False,imagemd="")
+   exportfits(imagename='on-after',fitsimage='on-after.fits')
+
 # --- Now do a phase only self-cal
 
-gtab = target_ms + '.GP0'
-gaincal(vis=target_ms,field='0',uvrange=myuvrange,caltable=gtab,refant = str(ref_ant),solint='64s',solnorm=False,combine='',minsnr=3,calmode='p',parang=False,gaintable=[],gainfield=[],interp=[],append=False)
+if doselfcal:
+   gtab = target_ms + '.GP0'
+   gaincal(vis=target_ms,field='0',uvrange=myuvrange,caltable=gtab,refant = str(ref_ant),solint='64s',solnorm=False,combine='',minsnr=3,calmode='p',parang=False,gaintable=[],gainfield=[],interp=[],append=False)
 
-applycal(vis=target_ms,gaintable=[gtab],field='0',calwt=False,parang=False,applymode='calonly',gainfield='0',interp = ['nearest'])
+   applycal(vis=target_ms,gaintable=[gtab],field='0',calwt=False,parang=False,applymode='calonly',gainfield='0',interp = ['nearest'])
 
 # --- Now make the image again
 
-full_integ_selfcal = target + 'selfcal0_full'
-tclean(vis=target_ms,selectdata=True,field="",spw="",timerange="",uvrange="",antenna="",scan="",observation="",intent="",datacolumn="corrected",imagename=full_integ_selfcal,imsize=[5000, 5000],cell=['3.0arcsec'],phasecenter="",stokes="I",projection="SIN",startmodel="",specmode="mfs",reffreq="",nchan=-1,start="",width="",outframe="LSRK",veltype="radio",restfreq=[],interpolation="linear",perchanweightdensity=True,gridder="widefield",facets=1,psfphasecenter="",chanchunks=1,wprojplanes=-1,vptable="",mosweight=True,aterm=True,psterm=False,wbawp=False,conjbeams=False,cfcache="",usepointing=False,computepastep=360.0,rotatepastep=360.0,pointingoffsetsigdev=[],pblimit=-1,normtype="flatnoise",deconvolver="mtmfs",scales=[0, 5, 15],nterms=2,smallscalebias=0.6,restoration=True,restoringbeam=[],pbcor=False,outlierfile="",weighting="briggs",robust=0,noise="1.0Jy",npixels=0,uvtaper=[],niter=25000,gain=0.1,threshold="0.05mJy",nsigma=0.0,cycleniter=-1,cyclefactor=0.5,minpsffraction=0.05,maxpsffraction=0.8,interactive=False,usemask="auto-multithresh",mask="",pbmask=0.0,sidelobethreshold=2.5,noisethreshold=5.0,lownoisethreshold=1.5,negativethreshold=0.0,smoothfactor=1.0,minbeamfrac=0.3,cutthreshold=0.01,growiterations=75,dogrowprune=True,minpercentchange=-1.0,verbose=False,fastnoise=True,restart=True,savemodel="modelcolumn",calcres=True,calcpsf=True,parallel=False)
-image_to_export = full_integ_selfcal + '.image.tt0'
-fits_image_name = full_integ_selfcal + '.fits'
-exportfits(imagename=image_to_export,fitsimage=fits_image_name)
+   full_integ_selfcal = target + 'selfcal0_full'
+   tclean(vis=target_ms,selectdata=True,field="",spw="",timerange="",uvrange="",antenna="",scan="",observation="",intent="",datacolumn="corrected",imagename=full_integ_selfcal,imsize=[5000, 5000],cell=['3.0arcsec'],phasecenter="",stokes="I",projection="SIN",startmodel="",specmode="mfs",reffreq="",nchan=-1,start="",width="",outframe="LSRK",veltype="radio",restfreq=[],interpolation="linear",perchanweightdensity=True,gridder="widefield",facets=1,psfphasecenter="",chanchunks=1,wprojplanes=-1,vptable="",mosweight=True,aterm=True,psterm=False,wbawp=False,conjbeams=False,cfcache="",usepointing=False,computepastep=360.0,rotatepastep=360.0,pointingoffsetsigdev=[],pblimit=-1,normtype="flatnoise",deconvolver="mtmfs",scales=[0, 5, 15],nterms=2,smallscalebias=0.6,restoration=True,restoringbeam=[],pbcor=False,outlierfile="",weighting="briggs",robust=0,noise="1.0Jy",npixels=0,uvtaper=[],niter=25000,gain=0.1,threshold="0.05mJy",nsigma=0.0,cycleniter=-1,cyclefactor=0.5,minpsffraction=0.05,maxpsffraction=0.8,interactive=False,usemask="auto-multithresh",mask="",pbmask=0.0,sidelobethreshold=2.5,noisethreshold=5.0,lownoisethreshold=1.5,negativethreshold=0.0,smoothfactor=1.0,minbeamfrac=0.3,cutthreshold=0.01,growiterations=75,dogrowprune=True,minpercentchange=-1.0,verbose=False,fastnoise=True,restart=True,savemodel="modelcolumn",calcres=True,calcpsf=True,parallel=False)
+   image_to_export = full_integ_selfcal + '.image.tt0'
+   fits_image_name = full_integ_selfcal + '.fits'
+   exportfits(imagename=image_to_export,fitsimage=fits_image_name)
